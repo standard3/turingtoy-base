@@ -1,0 +1,868 @@
+{
+  "machine": {
+    "blank": " ",
+    "start state": "right",
+    "final states": [
+      "done"
+    ],
+    "table": {
+      "right": {
+        "0": "R",
+        "1": "R",
+        "+": "R",
+        " ": {
+          "L": "read"
+        }
+      },
+      "read": {
+        "0": {
+          "write": "c",
+          "L": "have0"
+        },
+        "1": {
+          "write": "c",
+          "L": "have1"
+        },
+        "+": {
+          "write": " ",
+          "L": "rewrite"
+        }
+      },
+      "have0": {
+        "0": "L",
+        "1": "L",
+        "+": {
+          "L": "add0"
+        }
+      },
+      "have1": {
+        "0": "L",
+        "1": "L",
+        "+": {
+          "L": "add1"
+        }
+      },
+      "add0": {
+        "0": {
+          "write": "O",
+          "R": "back0"
+        },
+        " ": {
+          "write": "O",
+          "R": "back0"
+        },
+        "1": {
+          "write": "I",
+          "R": "back0"
+        },
+        "O": "L",
+        "I": "L"
+      },
+      "add1": {
+        "0": {
+          "write": "I",
+          "R": "back1"
+        },
+        " ": {
+          "write": "I",
+          "R": "back1"
+        },
+        "1": {
+          "write": "O",
+          "L": "carry"
+        },
+        "O": "L",
+        "I": "L"
+      },
+      "carry": {
+        "0": {
+          "write": "1",
+          "R": "back1"
+        },
+        " ": {
+          "write": "1",
+          "R": "back1"
+        },
+        "1": {
+          "write": "0",
+          "L": "carry"
+        }
+      },
+      "back0": {
+        "0": "R",
+        "1": "R",
+        "O": "R",
+        "I": "R",
+        "+": "R",
+        "c": {
+          "write": "0",
+          "L": "read"
+        }
+      },
+      "back1": {
+        "0": "R",
+        "1": "R",
+        "O": "R",
+        "I": "R",
+        "+": "R",
+        "c": {
+          "write": "1",
+          "L": "read"
+        }
+      },
+      "rewrite": {
+        "O": {
+          "write": "0",
+          "L": "rewrite"
+        },
+        "I": {
+          "write": "1",
+          "L": "rewrite"
+        },
+        "0": "L",
+        "1": "L",
+        " ": {
+          "R": "done"
+        }
+      },
+      "done": {}
+    }
+  },
+  "input": "1011+11001",
+  "output": "100100 11001",
+  "execution_history": [
+    {
+      "state": "right",
+      "reading": "1",
+      "position": 0,
+      "memory": "1011+11001",
+      "transition": "R"
+    },
+    {
+      "state": "right",
+      "reading": "0",
+      "position": 1,
+      "memory": "1011+11001",
+      "transition": "R"
+    },
+    {
+      "state": "right",
+      "reading": "1",
+      "position": 2,
+      "memory": "1011+11001",
+      "transition": "R"
+    },
+    {
+      "state": "right",
+      "reading": "1",
+      "position": 3,
+      "memory": "1011+11001",
+      "transition": "R"
+    },
+    {
+      "state": "right",
+      "reading": "+",
+      "position": 4,
+      "memory": "1011+11001",
+      "transition": "R"
+    },
+    {
+      "state": "right",
+      "reading": "1",
+      "position": 5,
+      "memory": "1011+11001",
+      "transition": "R"
+    },
+    {
+      "state": "right",
+      "reading": "1",
+      "position": 6,
+      "memory": "1011+11001",
+      "transition": "R"
+    },
+    {
+      "state": "right",
+      "reading": "0",
+      "position": 7,
+      "memory": "1011+11001",
+      "transition": "R"
+    },
+    {
+      "state": "right",
+      "reading": "0",
+      "position": 8,
+      "memory": "1011+11001",
+      "transition": "R"
+    },
+    {
+      "state": "right",
+      "reading": "1",
+      "position": 9,
+      "memory": "1011+11001",
+      "transition": "R"
+    },
+    {
+      "state": "right",
+      "reading": " ",
+      "position": 10,
+      "memory": "1011+11001 ",
+      "transition": {
+        "L": "read"
+      }
+    },
+    {
+      "state": "read",
+      "reading": "1",
+      "position": 9,
+      "memory": "1011+11001 ",
+      "transition": {
+        "write": "c",
+        "L": "have1"
+      }
+    },
+    {
+      "state": "have1",
+      "reading": "0",
+      "position": 8,
+      "memory": "1011+1100c ",
+      "transition": "L"
+    },
+    {
+      "state": "have1",
+      "reading": "0",
+      "position": 7,
+      "memory": "1011+1100c ",
+      "transition": "L"
+    },
+    {
+      "state": "have1",
+      "reading": "1",
+      "position": 6,
+      "memory": "1011+1100c ",
+      "transition": "L"
+    },
+    {
+      "state": "have1",
+      "reading": "1",
+      "position": 5,
+      "memory": "1011+1100c ",
+      "transition": "L"
+    },
+    {
+      "state": "have1",
+      "reading": "+",
+      "position": 4,
+      "memory": "1011+1100c ",
+      "transition": {
+        "L": "add1"
+      }
+    },
+    {
+      "state": "add1",
+      "reading": "1",
+      "position": 3,
+      "memory": "1011+1100c ",
+      "transition": {
+        "write": "O",
+        "L": "carry"
+      }
+    },
+    {
+      "state": "carry",
+      "reading": "1",
+      "position": 2,
+      "memory": "101O+1100c ",
+      "transition": {
+        "write": "0",
+        "L": "carry"
+      }
+    },
+    {
+      "state": "carry",
+      "reading": "0",
+      "position": 1,
+      "memory": "100O+1100c ",
+      "transition": {
+        "write": "1",
+        "R": "back1"
+      }
+    },
+    {
+      "state": "back1",
+      "reading": "0",
+      "position": 2,
+      "memory": "110O+1100c ",
+      "transition": "R"
+    },
+    {
+      "state": "back1",
+      "reading": "O",
+      "position": 3,
+      "memory": "110O+1100c ",
+      "transition": "R"
+    },
+    {
+      "state": "back1",
+      "reading": "+",
+      "position": 4,
+      "memory": "110O+1100c ",
+      "transition": "R"
+    },
+    {
+      "state": "back1",
+      "reading": "1",
+      "position": 5,
+      "memory": "110O+1100c ",
+      "transition": "R"
+    },
+    {
+      "state": "back1",
+      "reading": "1",
+      "position": 6,
+      "memory": "110O+1100c ",
+      "transition": "R"
+    },
+    {
+      "state": "back1",
+      "reading": "0",
+      "position": 7,
+      "memory": "110O+1100c ",
+      "transition": "R"
+    },
+    {
+      "state": "back1",
+      "reading": "0",
+      "position": 8,
+      "memory": "110O+1100c ",
+      "transition": "R"
+    },
+    {
+      "state": "back1",
+      "reading": "c",
+      "position": 9,
+      "memory": "110O+1100c ",
+      "transition": {
+        "write": "1",
+        "L": "read"
+      }
+    },
+    {
+      "state": "read",
+      "reading": "0",
+      "position": 8,
+      "memory": "110O+11001 ",
+      "transition": {
+        "write": "c",
+        "L": "have0"
+      }
+    },
+    {
+      "state": "have0",
+      "reading": "0",
+      "position": 7,
+      "memory": "110O+110c1 ",
+      "transition": "L"
+    },
+    {
+      "state": "have0",
+      "reading": "1",
+      "position": 6,
+      "memory": "110O+110c1 ",
+      "transition": "L"
+    },
+    {
+      "state": "have0",
+      "reading": "1",
+      "position": 5,
+      "memory": "110O+110c1 ",
+      "transition": "L"
+    },
+    {
+      "state": "have0",
+      "reading": "+",
+      "position": 4,
+      "memory": "110O+110c1 ",
+      "transition": {
+        "L": "add0"
+      }
+    },
+    {
+      "state": "add0",
+      "reading": "O",
+      "position": 3,
+      "memory": "110O+110c1 ",
+      "transition": "L"
+    },
+    {
+      "state": "add0",
+      "reading": "0",
+      "position": 2,
+      "memory": "110O+110c1 ",
+      "transition": {
+        "write": "O",
+        "R": "back0"
+      }
+    },
+    {
+      "state": "back0",
+      "reading": "O",
+      "position": 3,
+      "memory": "11OO+110c1 ",
+      "transition": "R"
+    },
+    {
+      "state": "back0",
+      "reading": "+",
+      "position": 4,
+      "memory": "11OO+110c1 ",
+      "transition": "R"
+    },
+    {
+      "state": "back0",
+      "reading": "1",
+      "position": 5,
+      "memory": "11OO+110c1 ",
+      "transition": "R"
+    },
+    {
+      "state": "back0",
+      "reading": "1",
+      "position": 6,
+      "memory": "11OO+110c1 ",
+      "transition": "R"
+    },
+    {
+      "state": "back0",
+      "reading": "0",
+      "position": 7,
+      "memory": "11OO+110c1 ",
+      "transition": "R"
+    },
+    {
+      "state": "back0",
+      "reading": "c",
+      "position": 8,
+      "memory": "11OO+110c1 ",
+      "transition": {
+        "write": "0",
+        "L": "read"
+      }
+    },
+    {
+      "state": "read",
+      "reading": "0",
+      "position": 7,
+      "memory": "11OO+11001 ",
+      "transition": {
+        "write": "c",
+        "L": "have0"
+      }
+    },
+    {
+      "state": "have0",
+      "reading": "1",
+      "position": 6,
+      "memory": "11OO+11c01 ",
+      "transition": "L"
+    },
+    {
+      "state": "have0",
+      "reading": "1",
+      "position": 5,
+      "memory": "11OO+11c01 ",
+      "transition": "L"
+    },
+    {
+      "state": "have0",
+      "reading": "+",
+      "position": 4,
+      "memory": "11OO+11c01 ",
+      "transition": {
+        "L": "add0"
+      }
+    },
+    {
+      "state": "add0",
+      "reading": "O",
+      "position": 3,
+      "memory": "11OO+11c01 ",
+      "transition": "L"
+    },
+    {
+      "state": "add0",
+      "reading": "O",
+      "position": 2,
+      "memory": "11OO+11c01 ",
+      "transition": "L"
+    },
+    {
+      "state": "add0",
+      "reading": "1",
+      "position": 1,
+      "memory": "11OO+11c01 ",
+      "transition": {
+        "write": "I",
+        "R": "back0"
+      }
+    },
+    {
+      "state": "back0",
+      "reading": "O",
+      "position": 2,
+      "memory": "1IOO+11c01 ",
+      "transition": "R"
+    },
+    {
+      "state": "back0",
+      "reading": "O",
+      "position": 3,
+      "memory": "1IOO+11c01 ",
+      "transition": "R"
+    },
+    {
+      "state": "back0",
+      "reading": "+",
+      "position": 4,
+      "memory": "1IOO+11c01 ",
+      "transition": "R"
+    },
+    {
+      "state": "back0",
+      "reading": "1",
+      "position": 5,
+      "memory": "1IOO+11c01 ",
+      "transition": "R"
+    },
+    {
+      "state": "back0",
+      "reading": "1",
+      "position": 6,
+      "memory": "1IOO+11c01 ",
+      "transition": "R"
+    },
+    {
+      "state": "back0",
+      "reading": "c",
+      "position": 7,
+      "memory": "1IOO+11c01 ",
+      "transition": {
+        "write": "0",
+        "L": "read"
+      }
+    },
+    {
+      "state": "read",
+      "reading": "1",
+      "position": 6,
+      "memory": "1IOO+11001 ",
+      "transition": {
+        "write": "c",
+        "L": "have1"
+      }
+    },
+    {
+      "state": "have1",
+      "reading": "1",
+      "position": 5,
+      "memory": "1IOO+1c001 ",
+      "transition": "L"
+    },
+    {
+      "state": "have1",
+      "reading": "+",
+      "position": 4,
+      "memory": "1IOO+1c001 ",
+      "transition": {
+        "L": "add1"
+      }
+    },
+    {
+      "state": "add1",
+      "reading": "O",
+      "position": 3,
+      "memory": "1IOO+1c001 ",
+      "transition": "L"
+    },
+    {
+      "state": "add1",
+      "reading": "O",
+      "position": 2,
+      "memory": "1IOO+1c001 ",
+      "transition": "L"
+    },
+    {
+      "state": "add1",
+      "reading": "I",
+      "position": 1,
+      "memory": "1IOO+1c001 ",
+      "transition": "L"
+    },
+    {
+      "state": "add1",
+      "reading": "1",
+      "position": 0,
+      "memory": "1IOO+1c001 ",
+      "transition": {
+        "write": "O",
+        "L": "carry"
+      }
+    },
+    {
+      "state": "carry",
+      "reading": " ",
+      "position": 0,
+      "memory": " OIOO+1c001 ",
+      "transition": {
+        "write": "1",
+        "R": "back1"
+      }
+    },
+    {
+      "state": "back1",
+      "reading": "O",
+      "position": 1,
+      "memory": "1OIOO+1c001 ",
+      "transition": "R"
+    },
+    {
+      "state": "back1",
+      "reading": "I",
+      "position": 2,
+      "memory": "1OIOO+1c001 ",
+      "transition": "R"
+    },
+    {
+      "state": "back1",
+      "reading": "O",
+      "position": 3,
+      "memory": "1OIOO+1c001 ",
+      "transition": "R"
+    },
+    {
+      "state": "back1",
+      "reading": "O",
+      "position": 4,
+      "memory": "1OIOO+1c001 ",
+      "transition": "R"
+    },
+    {
+      "state": "back1",
+      "reading": "+",
+      "position": 5,
+      "memory": "1OIOO+1c001 ",
+      "transition": "R"
+    },
+    {
+      "state": "back1",
+      "reading": "1",
+      "position": 6,
+      "memory": "1OIOO+1c001 ",
+      "transition": "R"
+    },
+    {
+      "state": "back1",
+      "reading": "c",
+      "position": 7,
+      "memory": "1OIOO+1c001 ",
+      "transition": {
+        "write": "1",
+        "L": "read"
+      }
+    },
+    {
+      "state": "read",
+      "reading": "1",
+      "position": 6,
+      "memory": "1OIOO+11001 ",
+      "transition": {
+        "write": "c",
+        "L": "have1"
+      }
+    },
+    {
+      "state": "have1",
+      "reading": "+",
+      "position": 5,
+      "memory": "1OIOO+c1001 ",
+      "transition": {
+        "L": "add1"
+      }
+    },
+    {
+      "state": "add1",
+      "reading": "O",
+      "position": 4,
+      "memory": "1OIOO+c1001 ",
+      "transition": "L"
+    },
+    {
+      "state": "add1",
+      "reading": "O",
+      "position": 3,
+      "memory": "1OIOO+c1001 ",
+      "transition": "L"
+    },
+    {
+      "state": "add1",
+      "reading": "I",
+      "position": 2,
+      "memory": "1OIOO+c1001 ",
+      "transition": "L"
+    },
+    {
+      "state": "add1",
+      "reading": "O",
+      "position": 1,
+      "memory": "1OIOO+c1001 ",
+      "transition": "L"
+    },
+    {
+      "state": "add1",
+      "reading": "1",
+      "position": 0,
+      "memory": "1OIOO+c1001 ",
+      "transition": {
+        "write": "O",
+        "L": "carry"
+      }
+    },
+    {
+      "state": "carry",
+      "reading": " ",
+      "position": 0,
+      "memory": " OOIOO+c1001 ",
+      "transition": {
+        "write": "1",
+        "R": "back1"
+      }
+    },
+    {
+      "state": "back1",
+      "reading": "O",
+      "position": 1,
+      "memory": "1OOIOO+c1001 ",
+      "transition": "R"
+    },
+    {
+      "state": "back1",
+      "reading": "O",
+      "position": 2,
+      "memory": "1OOIOO+c1001 ",
+      "transition": "R"
+    },
+    {
+      "state": "back1",
+      "reading": "I",
+      "position": 3,
+      "memory": "1OOIOO+c1001 ",
+      "transition": "R"
+    },
+    {
+      "state": "back1",
+      "reading": "O",
+      "position": 4,
+      "memory": "1OOIOO+c1001 ",
+      "transition": "R"
+    },
+    {
+      "state": "back1",
+      "reading": "O",
+      "position": 5,
+      "memory": "1OOIOO+c1001 ",
+      "transition": "R"
+    },
+    {
+      "state": "back1",
+      "reading": "+",
+      "position": 6,
+      "memory": "1OOIOO+c1001 ",
+      "transition": "R"
+    },
+    {
+      "state": "back1",
+      "reading": "c",
+      "position": 7,
+      "memory": "1OOIOO+c1001 ",
+      "transition": {
+        "write": "1",
+        "L": "read"
+      }
+    },
+    {
+      "state": "read",
+      "reading": "+",
+      "position": 6,
+      "memory": "1OOIOO+11001 ",
+      "transition": {
+        "write": " ",
+        "L": "rewrite"
+      }
+    },
+    {
+      "state": "rewrite",
+      "reading": "O",
+      "position": 5,
+      "memory": "1OOIOO 11001 ",
+      "transition": {
+        "write": "0",
+        "L": "rewrite"
+      }
+    },
+    {
+      "state": "rewrite",
+      "reading": "O",
+      "position": 4,
+      "memory": "1OOIO0 11001 ",
+      "transition": {
+        "write": "0",
+        "L": "rewrite"
+      }
+    },
+    {
+      "state": "rewrite",
+      "reading": "I",
+      "position": 3,
+      "memory": "1OOI00 11001 ",
+      "transition": {
+        "write": "1",
+        "L": "rewrite"
+      }
+    },
+    {
+      "state": "rewrite",
+      "reading": "O",
+      "position": 2,
+      "memory": "1OO100 11001 ",
+      "transition": {
+        "write": "0",
+        "L": "rewrite"
+      }
+    },
+    {
+      "state": "rewrite",
+      "reading": "O",
+      "position": 1,
+      "memory": "1O0100 11001 ",
+      "transition": {
+        "write": "0",
+        "L": "rewrite"
+      }
+    },
+    {
+      "state": "rewrite",
+      "reading": "1",
+      "position": 0,
+      "memory": "100100 11001 ",
+      "transition": "L"
+    },
+    {
+      "state": "rewrite",
+      "reading": " ",
+      "position": 0,
+      "memory": " 100100 11001 ",
+      "transition": {
+        "R": "done"
+      }
+    }
+  ]
+}
