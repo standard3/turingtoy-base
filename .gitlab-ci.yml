@@ -43,7 +43,9 @@ tests:
   artifacts:
     reports:
       junit: .local/test_report/test_report.xml
-      cobertura: .local/test_report/coverage.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: .local/test_report/coverage.xml
   coverage: '/Total coverage: \d+\.\d+/'
   except:
     variables:
