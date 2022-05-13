@@ -4,9 +4,6 @@ import sys
 from datetime import (
     datetime,
 )
-from logging import (
-    Logger,
-)
 from pathlib import (
     Path,
 )
@@ -52,21 +49,6 @@ def pytest_collection_modifyitems(config: Config, items: List[Any]) -> None:
         for item in items:
             if "slow" in item.keywords:
                 item.add_marker(skipper)
-
-
-@pytest.fixture(autouse=True)
-def logger(
-    request: pytest.FixtureRequest,
-) -> Logger:
-    from turingtoy.utils.logging import (
-        LogLevel,
-        get_logger,
-        init_logging,
-    )
-
-    init_logging(LogLevel.DEBUG, "turingtoy", "tests")
-
-    return get_logger(f"tests.{request.node.name}")
 
 
 @pytest.fixture(scope="session")
