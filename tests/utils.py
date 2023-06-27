@@ -81,11 +81,5 @@ def regression_test(
             to_json_obj(data, **dumps_kwargs),
             load_json(regression_test_ref_file),
         )
-        if diff:
-            shutil.copy(
-                regression_test_ref_file,
-                regression_test_ref_file.with_suffix(".old.json"),
-            )
-            # If a diff is detected write the file to enable git manual comparison
-            _write()
+
         assert not diff
