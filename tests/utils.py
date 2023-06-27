@@ -81,13 +81,5 @@ def regression_test(
             to_json_obj(data, **dumps_kwargs),
             load_json(regression_test_ref_file),
         )
-        if diff:
-            shutil.copy(
-                regression_test_ref_file,
-                regression_test_ref_file.with_suffix(".old.json"),
-            )
-            # If a diff is detected write the file to enable git manual comparison
-            # BUG : If you have a failed test, when doing the homework, it will overwrite the correct and needed output,
-            # this _write() should be ommited to make sure you are testing against the original output, not your own wrong output.
-            # _write()
+
         assert not diff
