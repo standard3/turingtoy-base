@@ -87,5 +87,7 @@ def regression_test(
                 regression_test_ref_file.with_suffix(".old.json"),
             )
             # If a diff is detected write the file to enable git manual comparison
-            _write()
+            # BUG : If you have a failed test, when doing the homework, it will overwrite the correct and needed output,
+            # this _write() should be ommited to make sure you are testing against the original output, not your own wrong output.
+            # _write()
         assert not diff
