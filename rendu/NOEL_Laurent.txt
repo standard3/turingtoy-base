@@ -1,2 +1,0 @@
-https://gitlab.com/c2ba/turingtoy-base
-7896b05ea29230b6745e48e35e37140df1e469ec
