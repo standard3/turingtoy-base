@@ -1,3 +1,2 @@
-URL_DU_REPO
-HASH_DU_COMMIT
-
+https://gitlab.com/theo.thebault/turingtoy-base
+5e3f6ec5e354819a70caf6a6f351face57f9f0bb
