@@ -1,0 +1,124 @@
+{
+  "machine": {
+    "blank": "0",
+    "start state": "e1",
+    "final states": [
+      "done"
+    ],
+    "table": {
+      "e1": {
+        "0": {
+          "L": "done"
+        },
+        "1": {
+          "write": "0",
+          "R": "e2"
+        }
+      },
+      "e2": {
+        "1": {
+          "write": "1",
+          "R": "e2"
+        },
+        "0": {
+          "write": "0",
+          "R": "e3"
+        }
+      },
+      "e3": {
+        "1": {
+          "write": "1",
+          "R": "e3"
+        },
+        "0": {
+          "write": "1",
+          "L": "e4"
+        }
+      },
+      "e4": {
+        "1": {
+          "write": "1",
+          "L": "e4"
+        },
+        "0": {
+          "write": "0",
+          "L": "e5"
+        }
+      },
+      "e5": {
+        "1": {
+          "write": "1",
+          "L": "e5"
+        },
+        "0": {
+          "write": "1",
+          "R": "e1"
+        }
+      },
+      "done": {}
+    }
+  },
+  "input": "1",
+  "output": "101",
+  "execution_history": [
+    {
+      "state": "e1",
+      "reading": "1",
+      "position": 0,
+      "memory": "1",
+      "transition": {
+        "write": "0",
+        "R": "e2"
+      }
+    },
+    {
+      "state": "e2",
+      "reading": "0",
+      "position": 1,
+      "memory": "00",
+      "transition": {
+        "write": "0",
+        "R": "e3"
+      }
+    },
+    {
+      "state": "e3",
+      "reading": "0",
+      "position": 2,
+      "memory": "000",
+      "transition": {
+        "write": "1",
+        "L": "e4"
+      }
+    },
+    {
+      "state": "e4",
+      "reading": "0",
+      "position": 1,
+      "memory": "001",
+      "transition": {
+        "write": "0",
+        "L": "e5"
+      }
+    },
+    {
+      "state": "e5",
+      "reading": "0",
+      "position": 0,
+      "memory": "001",
+      "transition": {
+        "write": "1",
+        "R": "e1"
+      }
+    },
+    {
+      "state": "e1",
+      "reading": "0",
+      "position": 1,
+      "memory": "101",
+      "transition": {
+        "L": "done"
+      }
+    }
+  ]
+}

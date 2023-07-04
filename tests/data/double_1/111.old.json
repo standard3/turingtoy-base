@@ -58,6 +58,7 @@
       "done": {}
     }
   },
+  "input": "111",
   "output": "1110111",
   "execution_history": [
     {
