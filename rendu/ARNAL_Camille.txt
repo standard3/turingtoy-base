@@ -1,2 +1,2 @@
-https://gitlab.com/Karnalitolesbonstuyaux/turingtoy-base.git
+https://gitlab.com/Karnalitolesbonstuyaux/turingtoy-base
 c1b8e4f8be9f0cb52c70fd4fc0e46da677c29633
