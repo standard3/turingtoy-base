@@ -42,34 +42,27 @@ def clone():
 
 
 all_tests_python = {
-    "test_nombre_entier": 1,
-    "test_successeur": 1,
-    "test_addition": 2,
-    "test_multiplication": 2,
-    "test_facto_ite": 1,
-    "test_facto_rec": 1,
-    "test_fibo_rec": 1,
-    "test_fibo_ite": 2,
-    "test_golden_phi": 1,
-    "test_sqrt5": 1,
-    "test_pow": 2,
+    "test_turing_machine_double_1": 1,
+    "test_turing_machine_add_two_binary_numbers": 1,
+    "test_turing_machine_binary_multiplication": 1,
 }
 
 
 @app.command("test-projet")
 def test_projet(etudiant: Optional[str] = None):
-    results = json.loads((correction_dir / "results_projet.json").read_text())
+    results = (
+        json.loads((correction_dir / "results_projet.json").read_text())
+        if (correction_dir / "results_projet.json").is_file()
+        else {}
+    )
     log_dir = correction_dir / "logs_projet"
     log_dir.mkdir(exist_ok=True, parents=True)
 
     def _run(folder):
-        # if folder.stem != etudiant and folder.stem in [
-        #     "Buaud_Benjamin",  # plein de boucles inutiles
-        #     "ESTELA_baptiste",  # fibo_it implémenté comme fibo_rec, pow implémenté avec "**"
-        #     "PELISSIER_theo",  # meme code que Benjamin ? boucles inutiles
-        #     "VERGEROLLE_Loicq",  # fibo_it implémenté comme fibo_rec
-        # ]:  # seems to have an infinite loop
-        #     return
+        if folder.stem != etudiant and folder.stem in [
+            "MADELAIN_Anselme",  # boucles infinie
+        ]:  # seems to have an infinite loop
+            return
         if folder.stem in results:  # already processed
             return
         print(f"Processing {folder}")
@@ -77,12 +70,13 @@ def test_projet(etudiant: Optional[str] = None):
         result = {}
         for test in all_tests_python:
             result[test] = False
-        run(f"cp {folder}/tests/tp.py tests/tp.py")
+        run(f"rm -r ./src")
+        run(f"cp -r {folder}/src .")
 
         def _run_test(test):
             print(test)
             cp2 = run(
-                f".venv/scripts/python -m pytest tests/test_projet.py -k {test}",
+                f".venv/scripts/python -m pytest tests/test_turing.py -k {test}",
                 universal_newlines=True,
                 stdout=sp.PIPE,
                 stderr=sp.PIPE,
