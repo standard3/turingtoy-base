@@ -1,4 +1,19 @@
-"""todo"""
+"""Turing machine implementation.
+
+This module contains the implementation of a Turing machine.
+It is validated and run by the `Machine` class.
+
+Classes:
+    Machine: a Turing machine
+    State: a state of the machine
+    Transition: a transition from one state to another
+    Write: write a character to the tape
+    Move: move the tape head in a direction
+    Direction: direction to move the tape head
+
+Exceptions:
+    ValueError: if the machine is not valid
+"""
 
 from dataclasses import (
     dataclass,
@@ -8,7 +23,9 @@ from enum import (
     unique,
 )
 from typing import (
+    Dict,
     List,
+    Tuple,
 )
 
 
@@ -98,7 +115,10 @@ class Machine:
     final_states: List[str]
     table: List[State]
 
-    def __init__(self, machine: dict) -> None:
+    def __init__(
+        self,
+        machine: Dict,
+    ) -> None:
         self.blank = machine["blank"]
 
         # we must validate the table first, as it is used in the other validations
@@ -121,10 +141,11 @@ class Machine:
             ValueError: if the start state is not in the table
         """
         # Validate that the start state is in the table
-        if self.start_state not in self.table:
-            raise ValueError("Start state not in transition table")
+        for state in self.table:
+            if state.name == start_state:
+                return start_state
 
-        return start_state
+        raise ValueError("Start state not in transition table")
 
     def _validate_final_states(self, final_states: List[str]) -> List[str]:
         """Validate final states.
@@ -138,14 +159,19 @@ class Machine:
         Raises:
             ValueError: if a final state is not in the table
         """
+        tmp = final_states.copy()
+
         # Validate that all final states are in the table
-        for final_state in final_states:
-            if final_state not in self.table:
-                raise ValueError("Final state not in transition table")
+        for state in self.table:
+            if state.name in final_states:
+                tmp.remove(state.name)
 
-        return final_states
+        if not tmp:
+            return final_states
 
-    def _validate_table(self, table: dict) -> List[Transition]:
+        raise ValueError("Final state not in transition table")
+
+    def _validate_table(self, table: dict) -> List[State]:
         """Validate the transition table.
 
         Args:
@@ -251,3 +277,74 @@ class Machine:
             states.append(State(name=state, transitions=transitions))
 
         return states
+
+    def _validate_input(self, input_: str) -> str:
+        """Validate the input.
+
+        Args:
+            input_: input to the machine
+
+        Raises:
+            ValueError: if the input contains invalid characters
+        """
+        # Validate that the input only contains 0 and 1
+        if not all(c in ["0", "1", "+", "*"] for c in input_):
+            raise ValueError("Input must only contain '0' and '1'")
+
+        return input_
+
+    def run(self, input_: str, steps: int | None = None) -> Tuple[str, List, bool]:
+        """Run the Turing machine.
+
+        Args:
+            input_: input to the machine
+            steps: maximum number of steps to run
+
+        Returns:
+            Content of the tape after the machine halts. This is a tuple of the content of
+            the tape, the execution history, and whether the machine has halted in a final state.
+        """
+        machine_input = self._validate_input(input_)
+
+        tape = list(machine_input)
+        tape.extend([self.blank] * 10)
+
+        state = self.start_state
+        position = 0
+        execution_history = []
+
+        for _ in range(steps) if steps else range(1000):
+            # Find the transition for the current state and symbol
+            transition = next(
+                (
+                    t
+                    for t in self.table[state].transitions
+                    if t.symbol == tape[position]
+                ),
+                None,
+            )
+
+            # If there is no transition, the machine halts
+            if not transition:
+                break
+
+            # Execute the instruction
+            if isinstance(transition.instruction, Write):
+                tape[position] = transition.instruction.character
+                state = transition.instruction.next_state
+                position += (
+                    1 if transition.instruction.direction == Direction.RIGHT else -1
+                )
+            else:
+                state = transition.instruction.state
+                position += (
+                    1 if transition.instruction.direction == Direction.RIGHT else -1
+                )
+
+            execution_history.append((state, tape[:], position))
+
+            # Check if the machine has halted in a final state
+            if state in self.final_states:
+                break
+
+        return "".join(tape), execution_history, state in self.final_states
