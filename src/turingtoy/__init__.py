@@ -17,7 +17,7 @@ __version__ = poetry_version.extract(source_file=__file__)
 def run_turing_machine(
     machine: Dict,
     input_: str,
-    steps: Optional[int] = None,
+    steps: int | None = None,
 ) -> Tuple[str, List, bool]:
     """Run a Turing machine.
 
@@ -27,10 +27,12 @@ def run_turing_machine(
         steps: maximum number of steps to run, if None run until the machine halts
 
     Returns:
-        output: content of the tape after the machine halts. This is a tuple of the content of
+        Content of the tape after the machine halts. This is a tuple of the content of
         the tape, the execution history, and whether the machine has halted in a final state.
     """
+    try:
+        turing_machine = Machine(machine)
+    except ValueError as e:
+        raise ValueError(f"Invalid machine: {e}") from e
 
-    machine = Machine(machine)
-
-    return ("", [], False)
+    return turing_machine.run(input_, steps)
