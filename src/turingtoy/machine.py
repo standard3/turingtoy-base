@@ -44,6 +44,7 @@ class Write:
 
     character: str | None
     direction: Direction
+    next_state: str
 
 
 @dataclass
@@ -51,12 +52,25 @@ class Transition:
     """A transition from one state to another.
 
     Attributes:
-        name: name of the state
+        symbol: symbol to transition on
         instruction: instruction to execute
     """
 
-    name: str
+    symbol: str
     instruction: Write | Move
+
+
+@dataclass
+class State:
+    """A state of the machine.
+
+    Attributes:
+        name: name of the state
+        transitions: list of transitions
+    """
+
+    name: str
+    transitions: List[Transition]
 
 
 class Machine:
@@ -82,7 +96,7 @@ class Machine:
     blank: str
     start_state: str
     final_states: List[str]
-    table: List[Transition]
+    table: List[State]
 
     def __init__(self, machine: dict) -> None:
         self.blank = machine["blank"]
@@ -196,37 +210,44 @@ class Machine:
         # Convert table to a list of Transition objects
         return self._convert_table(table)
 
-    def _convert_table(self, table: dict) -> List[Transition]:
-        """Convert the table to a list of Transition objects.
+    def _convert_table(self, table: dict) -> List[State]:
+        """Convert the table to a list of State objects.
 
         Args:
-            table: transition table
+            table: state table
 
         Returns:
-            list of Transition objects
+            list of State objects
         """
-        transitions = []
+        states = []
 
         for state, symbols in table.items():
+            transitions = []
+
             for symbol, actions in symbols.items():
                 instruction = None
+                direction = (
+                    Direction.RIGHT
+                    if actions.get(Direction.RIGHT.value)
+                    else Direction.LEFT
+                )
 
-                # This is a write symbol
+                # write symbol
                 if "write" in actions:
                     instruction = Write(
                         character=actions["write"],
-                        direction=Direction[actions["write"]],
+                        direction=direction,
+                        next_state=actions[direction.value],
                     )
-                # This is a move symbol
+                # move symbol
                 else:
-                    direction = (
-                        Direction.LEFT if Direction.LEFT in actions else Direction.RIGHT
-                    )
                     instruction = Move(
                         direction=direction,
-                        state=actions[direction],
+                        state=actions[direction.value],
                     )
 
-                transitions.append(Transition(name=state, instruction=instruction))
+                transitions.append(Transition(symbol=symbol, instruction=instruction))
 
-        return transitions
+            states.append(State(name=state, transitions=transitions))
+
+        return states
