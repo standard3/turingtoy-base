@@ -306,45 +306,103 @@ class Machine:
         """
         machine_input = self._validate_input(input_)
 
+        # Initialize the tape and its head
         tape = list(machine_input)
-        tape.extend([self.blank] * 10)
+        tape.append(self.blank)
+        print(f"Initial tape: {tape}")
 
-        state = self.start_state
+        # Initialize the state
+        current_state = self.start_state
+        print(f"Initial state: {current_state}")
+
+        # Initialize the tape head position
         position = 0
+        print(f"Initial position: {position}")
+
+        # Initialize the execution history
         execution_history = []
 
-        for _ in range(steps) if steps else range(1000):
-            # Find the transition for the current state and symbol
-            transition = next(
-                (
-                    t
-                    for t in self.table[state].transitions
-                    if t.symbol == tape[position]
-                ),
-                None,
+        # Steps should
+        if steps is None:
+            steps = # FIXME
+
+        # Run the machine
+        for _ in range(steps):
+            # Get the current symbol
+            symbol = tape[position]
+            print(f"- Current tape symbol: {symbol}")
+
+            current_transition = None
+
+            # Find the current state in the table
+            for state in self.table:
+                if state.name != current_state:
+                    continue
+
+                for transition in state.transitions:
+                    if transition.symbol != symbol:
+                        continue
+
+                    current_transition = transition
+                    break
+
+            # If no transition is found, halt
+            if current_transition is None:
+                break
+
+            print(f"|  State (position={position}): {current_transition}")
+
+            # Execute the transition
+            if isinstance(current_transition.instruction, Write):
+                # Write the character to the tape
+                tape[position] = current_transition.instruction.character
+
+                # Update the current state
+                state = current_transition.instruction.next_state
+
+            elif isinstance(current_transition.instruction, Move):
+                # Update the current state
+                state = current_transition.instruction.state
+
+            print(f"|  New tape: {tape}")
+
+            # Move the tape head
+            position += (
+                1 if current_transition.instruction.direction == Direction.RIGHT else -1
             )
 
-            # If there is no transition, the machine halts
-            if not transition:
-                break
+            print(f"|  New position: {position}")
 
-            # Execute the instruction
-            if isinstance(transition.instruction, Write):
-                tape[position] = transition.instruction.character
-                state = transition.instruction.next_state
-                position += (
-                    1 if transition.instruction.direction == Direction.RIGHT else -1
-                )
-            else:
-                state = transition.instruction.state
-                position += (
-                    1 if transition.instruction.direction == Direction.RIGHT else -1
-                )
+            # Add the current state and tape to the execution history
+            execution_history.append(
+                {
+                    "state": current_state,
+                    "reading": tape[position],
+                    "position": position,
+                    "memory": 0,  # FIXME
+                    "transition": {},  # FIXME
+                }
+            )
 
-            execution_history.append((state, tape[:], position))
-
-            # Check if the machine has halted in a final state
+            # If the machine is in a final state, halt
             if state in self.final_states:
+                print(f"Got to final state: {state}, halting...")
                 break
 
-        return "".join(tape), execution_history, state in self.final_states
+            # If the tape head is at the left end of the tape, add a blank cell
+            if position < 0:
+                tape.insert(0, self.blank)
+                position = 0
+                print(f"Added blank cell at position 0: {tape}")
+
+            # If the tape head is at the right end of the tape, add a blank cell
+            if position >= len(tape):
+                tape.append(self.blank)
+                print(f"Added blank cell at position {position}: {tape}")
+
+            # Update the current state
+            current_state = state
+            print(f"|  State (position={position}): {current_transition}")
+
+        # Return the content of the tape, the execution history, and whether the machine has halted in a final state
+        return "".join(tape), execution_history, current_state in self.final_states
