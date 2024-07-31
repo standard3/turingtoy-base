@@ -322,12 +322,13 @@ class Machine:
         # Initialize the execution history
         execution_history = []
 
-        # Steps should
+        # Initialize the number of steps
+        count = 0
         if steps is None:
-            steps = # FIXME
+            steps = 0  # this will not trigger the break condition
 
         # Run the machine
-        for _ in range(steps):
+        while True:
             # Get the current symbol
             symbol = tape[position]
             print(f"- Current tape symbol: {symbol}")
@@ -366,13 +367,6 @@ class Machine:
 
             print(f"|  New tape: {tape}")
 
-            # Move the tape head
-            position += (
-                1 if current_transition.instruction.direction == Direction.RIGHT else -1
-            )
-
-            print(f"|  New position: {position}")
-
             # Add the current state and tape to the execution history
             execution_history.append(
                 {
@@ -383,6 +377,13 @@ class Machine:
                     "transition": {},  # FIXME
                 }
             )
+
+            # Move the tape head
+            position += (
+                1 if current_transition.instruction.direction == Direction.RIGHT else -1
+            )
+
+            print(f"|  New position: {position}")
 
             # If the machine is in a final state, halt
             if state in self.final_states:
@@ -403,6 +404,10 @@ class Machine:
             # Update the current state
             current_state = state
             print(f"|  State (position={position}): {current_transition}")
+
+            count += 1
+            if count == steps:
+                break
 
         # Return the content of the tape, the execution history, and whether the machine has halted in a final state
         return "".join(tape), execution_history, current_state in self.final_states
