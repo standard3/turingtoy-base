@@ -186,6 +186,11 @@ class Machine:
         # Validate that all states are in the table
         for state in table:
             for symbol in table[state]:
+                if isinstance(table[state][symbol], str):
+                    # TODO: validate that the state is in the table
+                    # Handling is different as the state is not a dict
+                    continue
+
                 symbol_dict = table[state][symbol]
                 direction = (
                     Direction.LEFT.value
@@ -196,7 +201,8 @@ class Machine:
                 # Validate that the move symbol is a valid direction
                 if direction not in [d.value for d in Direction]:
                     raise ValueError(
-                        f"Write symbol for {symbol_dict} must be '{Direction.LEFT.value}' or '{Direction.RIGHT.value}'"
+                        f"Write symbol for {symbol_dict} must be '{Direction.LEFT.value}'"
+                        f" or '{Direction.RIGHT.value}'"
                     )
 
                 # Check write symbol
@@ -368,13 +374,28 @@ class Machine:
             print(f"|  New tape: {tape}")
 
             # Add the current state and tape to the execution history
+            # FIXME: crappy code, should be refactored
+            if state in self.final_states:
+                transition = {current_transition.instruction.direction.value: "done"}
+            else:
+                if isinstance(current_transition.instruction, Write):
+                    transition = {
+                        "write": current_transition.instruction.character,
+                        current_transition.instruction.direction.value: state,
+                    }
+                else:
+                    transition = {
+                        "move": current_transition.instruction.direction.value,
+                        current_transition.instruction.direction.value: state,
+                    }
+
             execution_history.append(
                 {
                     "state": current_state,
                     "reading": tape[position],
                     "position": position,
-                    "memory": 0,  # FIXME
-                    "transition": {},  # FIXME
+                    "memory": [*tape],
+                    "transition": transition,
                 }
             )
 
@@ -387,6 +408,7 @@ class Machine:
 
             # If the machine is in a final state, halt
             if state in self.final_states:
+                current_state = state
                 print(f"Got to final state: {state}, halting...")
                 break
 
@@ -403,11 +425,16 @@ class Machine:
 
             # Update the current state
             current_state = state
-            print(f"|  State (position={position}): {current_transition}")
+            print(f"|  New state (position={position}): {current_transition}")
 
             count += 1
             if count == steps:
                 break
 
-        # Return the content of the tape, the execution history, and whether the machine has halted in a final state
-        return "".join(tape), execution_history, current_state in self.final_states
+        # Return the content of the tape, the execution history, and whether
+        # the machine has halted in a final state
+        return (
+            "".join(tape),
+            execution_history,
+            current_state in self.final_states,
+        )
